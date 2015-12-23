@@ -1,0 +1,101 @@
+   Ejemplos url:
+        # "https://contractaciopublica.gencat.cat/ecofin_pscp/AppJava/awardnotice.pscp?idDoc=13065268&advancedSearch=false&lawType=2&reqCode=viewPcan&",
+        # "https://contractaciopublica.gencat.cat/ecofin_pscp/AppJava/awardnotice.pscp?idDoc=13058040&advancedSearch=false&lawType=2&reqCode=viewPcan&",
+        # "https://contractaciopublica.gencat.cat/ecofin_pscp/AppJava/awardnotice.pscp?idDoc=2787510&advancedSearch=false&lawType=2&reqCode=viewPcan&",
+        # "https://contractaciopublica.gencat.cat/ecofin_pscp/AppJava/awardnotice.pscp?idDoc=13115121&advancedSearch=false&lawType=2&reqCode=viewPcan&",
+        # "https://contractaciopublica.gencat.cat/ecofin_pscp/AppJava/awardnotice.pscp?idDoc=13123417&advancedSearch=false&lawType=2&reqCode=viewPcan&%27",
+
+        #(5 camps)https://contractaciopublica.gencat.cat/ecofin_pscp/AppJava/awardnotice.pscp?idDoc=2787510&advancedSearch=false&lawType=2&reqCode=viewPcan&
+        #(10 camps)https://contractaciopublica.gencat.cat/ecofin_pscp/AppJava/awardnotice.pscp?idDoc=13115121&advancedSearch=false&lawType=2&reqCode=viewPcan&
+        #(6 Camps)https://contractaciopublica.gencat.cat/ecofin_pscp/AppJava/awardnotice.pscp?idDoc=13123417&advancedSearch=false&lawType=2&reqCode=viewPcan&%27
+
+        #Ejemplo: Con Muchos Lotes
+        #https://contractaciopublica.gencat.cat/ecofin_pscp/AppJava/awardnotice.pscp?idDoc=13058040&advancedSearch=false&lawType=2&reqCode=viewPcan&
+        #sin lotes:
+        #https://contractaciopublica.gencat.cat/ecofin_pscp/AppJava/awardnotice.pscp?idDoc=13065268&advancedSearch=false&lawType=2&reqCode=viewPcan&,
+
+
+   # Dades de contractant y tipologia de contracte
+            # Organ de contractació
+            # print(response.css('#denominacio-contracte dd').xpath('text()').extract()[0].strip())
+            # codi, tipusexpedient... [1,2,3... n]
+
+
+        #DadesContracte:
+            #Descripció de la prestació:
+              #response.css(".dades-contracte dl dd").xpath('text()').extract()[0]
+            #Presupost:
+                #en el cas de que estigui en un spam: (0=Sense IVA, 1= Amb IVA)
+                #response.css(".dades-contracte dl dd span").xpath('text()').extract()[0]
+            #Temps:
+                #u" ".join(response.css(".dades-contracte dl dd").xpath('text()').extract()[4].split())
+                #List comprension:
+                #a= response.css(".dades-contracte dl dd").xpath('text()').extract()[4]
+                #u"".join(b for b in a if b not in '\n\t\r')
+
+            #Ambit Geografic
+                #response.css(".dades-contracte dl dd").xpath('text()').extract()[5]
+            #Termini de presentació d'ofertes:
+                #u" ".join(response.css(".dades-contracte dl dd").xpath('text()').extract()[6].split())
+            #Observacions:
+                #u" ".join(response.css(".dades-contracte dl dd").xpath('text()').extract()[7].split())
+            #ValorEstimatContracte:
+                #u" ".join(response.css(".dades-contracte dl dd").xpath('text()').extract()[8].split())
+            #SubhastaElectronica:
+                #response.css(".dades-contracte dl dd").xpath('text()').extract()[9]
+            #Obertura de pliques:
+                #u" ".join(response.css(".dades-contracte dl dd").xpath('text()').extract()[10].split())
+
+        #Dades de l'adjudicació:
+            #Data De publicació:
+                #u" ".join(response.css(".dades-contracte dl dd").xpath('text()').extract()[11].split())
+
+        #A partí d'aqui poden ser lots
+
+            #SENSE LOTS (u" ".join(response.css(".dades-contracte dl dt").xpath('text()').extract()[12].split())== u"Descripció del lot:") == FALSE
+                #Data Adjudicació:
+                #u" ".join(response.css(".dades-contracte dl dd").xpath('text()').extract()[11].split())
+                #Termini:
+                #u" ".join(response.css(".dades-contracte dl dd").xpath('text()').extract()[12].split())
+                #Motiu:
+                #u" ".join(response.css(".dades-contracte dl dd").xpath('text()').extract()[13].split())
+                #Numero de ofertes Rebudes:
+                #u" ".join(response.css(".dades-contracte dl dd").xpath('text()').extract()[14].split())
+                #CodiCPV
+                #u" ".join(response.css(".dades-contracte dl dd").xpath('text()').extract()[15].split())
+
+                #Dades Empresa:
+                    #Denominació
+                    #response.css(".dades-empresa dd").xpath('text()')[0].extract()
+                    #nacionalitat:
+                    #response.css(".dades-empresa dd").xpath('text()')[1].extract()
+                    #Identificació:
+                    #response.css(".dades-empresa dd").xpath('text()')[2].extract()
+                    #Import amb IVA:
+                    #u" ".join(response.css(".dades-empresa dd").xpath('text()')[3].extract().split())
+                    #Import SENSE IVA:
+                    #u" ".join(response.css(".dades-empresa dd").xpath('text()')[4].extract().split())
+
+            #AMB LOTS
+                #Dades lots:
+                    #Num de lot:(Ha de iterar fins el 0)
+                        #response.css(".grup-lot")[-1].css("dd").xpath("text()")[0].extract()
+                    #Descripció del lot:
+                        #response.css(".grup-lot")[-1].css("dd").xpath("text()")[1].extract()
+                    #Data d'adjudicació del contracte:
+                        #response.css(".grup-lot")[-1].css("dd").xpath("text()")[2].extract().split()
+                    #Codi CPV:
+                        #response.css(".grup-lot")[-1].css("dd").xpath("text()")[3].extract()
+
+                #Dades empresa:[El lot pot quedar desert]
+                    # response.css(".grup-lot")[-2].css(".dades-empresa")
+                    #Denominació:
+                        # response.css(".grup-lot")[-2].css(".dades-empresa dd")[0].xpath("text()").extract()
+                    #Nacionalitat:
+                        # response.css(".grup-lot")[-2].css(".dades-empresa dd")[1].xpath("text()").extract()
+                    #Identificació:
+                        # response.css(".grup-lot")[-2].css(".dades-empresa dd")[2].xpath("text()").extract()
+                    #Import:
+                         # response.css(".grup-lot")[-2].css(".dades-empresa dd")[0].xpath("text()").extract()
+                    #Import sense IVA:
+                        # response.css(".grup-lot")[-2].css(".dades-empresa dd")[0].xpath("text()").extract()
