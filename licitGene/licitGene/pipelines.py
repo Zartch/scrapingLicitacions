@@ -8,8 +8,11 @@ class LicitgenePipeline(object):
         self.file = open('items.jl', 'wb')
 
     def process_item(self, item, spider):
-        if isinstance(item, basestring):
-            item.strip()
+        for field in item:
+            if isinstance(item[field],basestring):
+                aux = item[field]
+                aux = aux.strip()
+                item[field] = aux
         line = json.dumps(dict(item)) + "\n"
         self.file.write(line)
         return item
